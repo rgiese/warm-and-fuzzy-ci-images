@@ -4,7 +4,7 @@ jobs:
     machine: true
     environment:
       IMAGE_NAME: warm-and-fuzzy-ci
-      IMAGE_TAG: 1
+      IMAGE_TAG: 2
     steps:
       - checkout
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
