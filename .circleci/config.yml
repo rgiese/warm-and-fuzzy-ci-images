@@ -1,54 +1,15 @@
-image_config: &image_config
-
-  # make sure to set your Docker Hub username & password in CircleCI,
-  # either as project-specific environment variables
-  # or as resources in your organization's org-global Context
-
-  IMAGE_NAME: warm-and-fuzzy-ci
-
-  IMAGE_TAG: 1
-
-  # NOTE: if you're modifying this config.yml file manually
-  # rather than using the included setup script,
-  # make sure you also add the values of your IMAGE_NAME & IMAGE_TAG variables
-  # to the `test_image` job (line 55)
-
-  LINUX_VERSION: DEBIAN_STRETCH
-
-  # RUBY_VERSION_NUM: # pick a version from https://cache.ruby-lang.org/pub/ruby
-
-  NODE_VERSION_NUM: 12.14.0
-
-  PYTHON_VERSION_NUM: 3.8.1
-
-  JAVA: false
-
-  MYSQL_CLIENT: false
-
-  POSTGRES_CLIENT: false
-
-  DOCKERIZE: false
-
-  BROWSERS: false
-
 version: 2
 jobs:
-  build:
+  warm-and-fuzzy-ci:
     machine: true
     environment:
-      <<: *image_config
-
+      IMAGE_NAME: warm-and-fuzzy-ci
+      IMAGE_TAG: 1
     steps:
       - checkout
-
-      - run: bash scripts/generate.sh > Dockerfile
-
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
       - run: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG .
-
       - run: docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG && sleep 10
-
       - store_artifacts:
           path: Dockerfile
 
@@ -56,5 +17,5 @@ workflows:
   version: 2
   dockerfile_wizard:
     jobs:
-      - build:
+      - warm-and-fuzzy-ci:
           context: grumpycorp-dockerhub
