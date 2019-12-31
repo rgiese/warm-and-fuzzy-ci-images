@@ -4,10 +4,33 @@ FROM node:12.14-stretch
 RUN apt-get update
 RUN apt-get install -y apt-utils
 
-# Install C++ toolchain
+#
+# Python 3.x
+#
+
+RUN apt-get install -y python3-pip python3-dev
+
+RUN \
+  cd /usr/local/bin \
+  && ln -s /usr/bin/python3 python \
+  && pip3 install --upgrade pip
+
+
+#
+# AWS CLI
+#
+
+RUN pip3 install awscli
+
+
+#
+# C++ toolchain
+#
+
 RUN apt-get install -y git make cmake gcc g++
 
 ENV GRUMPYCORP_ROOT /usr/grumpycorp
+
 
 #
 # Flatbuffers
@@ -25,25 +48,22 @@ RUN cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 RUN make
 RUN ./flattests
 
+
 #
 # Android toolchain
 # (hat tip to https://github.com/thyrlian/AndroidSDK)
 #
 
-# support multiarch: i386 architecture
-#RUN dpkg --add-architecture i386
-# libncurses5:i386 libc6:i386 libstdc++6:i386 zlib1g:i386
-
-# install Java
-# install essential tools
-# install Qt
+# Install essential tools
+# Install Java
+# Install Qt
 RUN apt-get install -y --no-install-recommends \
       lib32gcc1 lib32ncurses5 lib32z1  \
-      openjdk-8-jdk \
       wget unzip \
+      openjdk-8-jdk \
       qt5-default
 
-# download and install Gradle
+# Download and install Gradle
 # https://services.gradle.org/distributions/
 ARG GRADLE_VERSION=5.6.4
 RUN cd /opt && \
@@ -52,7 +72,7 @@ RUN cd /opt && \
     ls -d */ | sed 's/\/*$//g' | xargs -I{} mv {} gradle && \
     rm gradle*.zip
 
-# download and install Android SDK
+# Download and install Android SDK
 # https://developer.android.com/studio/#downloads
 ARG ANDROID_SDK_VERSION=4333796
 ENV ANDROID_HOME /opt/android-sdk
@@ -61,15 +81,12 @@ RUN mkdir -p ${ANDROID_HOME} && cd ${ANDROID_HOME} && \
     unzip *tools*linux*.zip && \
     rm *tools*linux*.zip
 
-# set the environment variables
+# Set the environment variables
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 ENV GRADLE_HOME /opt/gradle
 ENV PATH ${PATH}:${GRADLE_HOME}/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools/bin
 ENV _JAVA_OPTIONS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
 
-# WORKAROUND: for issue https://issuetracker.google.com/issues/37137213
-#ENV LD_LIBRARY_PATH ${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
-
-# accept the license agreements of the SDK components
+# Accept the license agreements of the SDK components
 ADD android/license_accepter.sh /opt/
 RUN chmod +x /opt/license_accepter.sh && /opt/license_accepter.sh $ANDROID_HOME
