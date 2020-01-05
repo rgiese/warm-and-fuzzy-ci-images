@@ -58,9 +58,9 @@ RUN ./flattests
 # Install Java
 # Install Qt
 RUN apt-get install -y --no-install-recommends \
-      lib32gcc1 lib32ncurses5 lib32z1  \
+      lib32gcc1 lib32ncurses6 lib32z1  \
       wget unzip \
-      openjdk-8-jdk \
+      openjdk-11-jdk \
       qt5-default
 
 # Download and install Gradle
