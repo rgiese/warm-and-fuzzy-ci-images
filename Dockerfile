@@ -85,7 +85,6 @@ RUN mkdir -p ${ANDROID_HOME} && cd ${ANDROID_HOME} && \
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV GRADLE_HOME /opt/gradle
 ENV PATH ${PATH}:${GRADLE_HOME}/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools/bin
-ENV _JAVA_OPTIONS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
 
 # Accept the license agreements of the SDK components
 ADD android/license_accepter.sh /opt/
