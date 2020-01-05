@@ -55,7 +55,7 @@ RUN ./flattests
 #
 
 # Install essential tools
-# Install Java
+# Install Java (NOTE: update JAVA_HOME below when rev'ing openjdk package version)
 # Install Qt
 RUN apt-get install -y --no-install-recommends \
       lib32gcc1 lib32ncurses6 lib32z1  \
@@ -82,7 +82,7 @@ RUN mkdir -p ${ANDROID_HOME} && cd ${ANDROID_HOME} && \
     rm *tools*linux*.zip
 
 # Set the environment variables
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV GRADLE_HOME /opt/gradle
 ENV PATH ${PATH}:${GRADLE_HOME}/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools/bin
 ENV _JAVA_OPTIONS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
