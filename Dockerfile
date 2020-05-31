@@ -1,5 +1,4 @@
-# Use Node LTS for now (be boring)
-FROM node:12.14-buster
+FROM node:14.3-buster
 
 RUN apt-get update
 RUN apt-get install -y apt-utils
